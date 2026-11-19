@@ -1,0 +1,28 @@
+# --- Environment ---
+.env
+
+# --- Python / Django ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+db.sqlite3
+media/
+staticfiles/
+*.log
+
+# --- Node / Vite ---
+node_modules/
+dist/
+.vite/
+npm-debug.log*
+
+# --- IDE / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Excel-отчёты, скачанные локально ---
+*.xlsx

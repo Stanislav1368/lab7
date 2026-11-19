@@ -1,0 +1,33 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ title }} | Coffee Shop{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+  <a href="{% url 'admin:index' %}">☕ Coffee Shop — админ-панель</a>
+</h1>
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+{# Минимальная стилизация админки под «кофейную» палитру #}
+<style>
+  :root {
+    --primary: #6f4e37;
+    --secondary: #c8a27a;
+    --accent: #f7f1e8;
+    --header-color: #ffffff;
+  }
+  #header { background: #6f4e37; color: #fff; }
+  #header a:link, #header a:visited { color: #fff; }
+  div.breadcrumbs { background: #7b5640; }
+  .module h2, .module caption, .inline-group h2 { background: #8a624a; }
+  .button, input[type=submit], input[type=button], .submit-row input, a.button {
+    background: #6f4e37;
+  }
+  .button:hover, input[type=submit]:hover, input[type=button]:hover, a.button:hover {
+    background: #4a3222;
+  }
+</style>
+{% endblock %}

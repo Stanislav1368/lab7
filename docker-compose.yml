@@ -1,0 +1,53 @@
+# Учебный проект «Интернет-магазин кофе»: Django + PostgreSQL + Vue (Vite dev server).
+# Все параметры берутся из .env (шаблон — .env.example).
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      # backend стартует только после того, как Postgres реально готов принимать запросы
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    env_file: .env
+    environment:
+      # Внутри docker-сети база доступна по имени сервиса.
+      POSTGRES_HOST: db
+    volumes:
+      # Код монтируем, чтобы работал autoreload runserver'а.
+      - ./backend:/app
+      # Картинки товаров храним в отдельном volume — не теряются при пересборке.
+      - media_data:/app/media
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    environment:
+      # Vite проксирует /api и /media на этот адрес (см. vite.config.js).
+      VITE_API_TARGET: http://backend:8000
+    volumes:
+      - ./frontend:/app
+      # node_modules берётся из образа (анонимный volume), чтобы не переустанавливать
+      # пакеты на хосте и не ломать linux-бинарники.
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  media_data:

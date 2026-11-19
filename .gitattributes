@@ -1,0 +1,6 @@
+# Нормализация переводов строк.
+* text=auto
+
+# Shell-скрипты должны оставаться с LF, иначе entrypoint.sh падает в Linux-контейнере.
+*.sh text eol=lf
+Dockerfile text eol=lf
